@@ -2,10 +2,12 @@ package com.example.jetpackdesign.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetpackdesign.R
@@ -42,6 +45,7 @@ fun CustomTopBar(
     appIcon: Int,
     iconDescription: String
 ) {
+
     CenterAlignedTopAppBar(
         actions = actions,
         title = { Text(text = title) },
@@ -58,7 +62,6 @@ fun CustomTopBar(
 
         })
 }
-
 
 @Composable
 fun CustomMessageCard(message: Message) {
@@ -126,7 +129,7 @@ fun MessageNameAndTime(message: Message) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(text = message.user, style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.width(10.dp))
-        Text(text = message.timeSTamp, style = MaterialTheme.typography.bodySmall)
+        Text(text = message.timeStamp, style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -159,7 +162,7 @@ fun ChatMessageBobble(message: Message) {
         }
         Spacer(modifier = Modifier.height(10.dp))
         if (message.image != null) {
-            ChatMessageImageBobble(message.image!!,messageContainerColor)
+            ChatMessageImageBobble(message.image!!, messageContainerColor)
         }
     }
 
@@ -187,9 +190,9 @@ fun ChatMessageBobblePreview() {
 }
 
 @Composable
-fun ChatMessageImageBobble(image: Int,color: Color) {
+fun ChatMessageImageBobble(image: Int, color: Color) {
     Surface(
-        color =color,
+        color = color,
         shape = RoundedCornerShape(5f, 30f, 30f, 30f)
     ) {
         Image(
@@ -245,3 +248,113 @@ fun ChatMessageDividerWithTimeTag() {
     }
 }
 
+@Composable
+fun ChatUserCard(color: Color,onTab: () -> Unit) {
+
+    Surface(
+        color =color
+    ) {
+        Column(modifier = Modifier.clickable {
+            onTab()
+        }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp, horizontal = 10.dp),
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = MaterialTheme.colorScheme.errorContainer
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.img),
+                        contentDescription = "chat_user_card",
+                        modifier = Modifier.size(45.dp)
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 10.dp, end = 10.dp)
+                ) {
+                    Row {
+                        Text(
+                            text = "Javiya raj",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(0.8f)
+                        )
+                        Text(
+                            text = "08:40 AM",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.weight(0.2f),
+                            textAlign = TextAlign.End
+                        )
+                    }
+
+                    Text(text = "hi,how are you", style = MaterialTheme.typography.bodySmall)
+                }
+
+            }
+            Divider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 0.6.dp,
+                color = Color.Gray
+            )
+        }
+
+    }
+
+
+}
+
+
+@Preview
+@Composable
+fun ChatUserCardPreview() {
+
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 15.dp, horizontal = 10.dp),
+        ) {
+            Surface(
+                shape = RoundedCornerShape(10.dp),
+                color = MaterialTheme.colorScheme.errorContainer
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.img),
+                    contentDescription = "chat_user_card",
+                    modifier = Modifier.size(45.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp, end = 10.dp)
+            ) {
+                Row {
+                    Text(
+                        text = "Javiya raj",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(0.8f)
+                    )
+                    Text(
+                        text = "08:40 AM",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(0.2f),
+                        textAlign = TextAlign.End
+                    )
+                }
+
+                Text(text = "hi,how are you", style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+
+
+}
