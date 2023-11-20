@@ -26,9 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-
-            val controller= rememberNavController()
+            val controller = rememberNavController()
             NavGraph(navHostController = controller)
         }
     }

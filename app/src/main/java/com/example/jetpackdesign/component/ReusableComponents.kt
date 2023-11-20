@@ -3,10 +3,12 @@ package com.example.jetpackdesign.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,17 +28,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.jetpackdesign.R
 import com.example.jetpackdesign.data.model.Message
+import com.example.jetpackdesign.data.model.UserChatModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,21 +55,51 @@ fun CustomTopBar(
     actions: @Composable RowScope.() -> Unit = {},
     onIconTab: () -> Unit,
     appIcon: Int,
-    iconDescription: String
+    iconDescription: String,
+    isForMainScreen: Boolean = false
 ) {
 
     CenterAlignedTopAppBar(
         actions = actions,
-        title = { Text(text = title) },
+        title = {
+            if (isForMainScreen) {
+                Text(text = title)
+            } else {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Image(
+                        painter = painterResource(id = appIcon), contentDescription = "",
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    Text(text = title)
+                }
+            }
+
+        },
         navigationIcon = {
+
             IconButton(
                 onClick = onIconTab
             ) {
-                Icon(
-                    painter = painterResource(id = appIcon),
-                    contentDescription = iconDescription,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                if (isForMainScreen) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_jetchat_front),
+                        contentDescription = iconDescription,
+                        tint = MaterialTheme.colorScheme.errorContainer
+                    )
+
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_back_icon),
+                        contentDescription = "back icon",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(CircleShape)
+                    )
+                }
             }
 
         })
@@ -146,7 +188,7 @@ fun MessageNameAndTimePreview() {
 @Composable
 fun ChatMessageBobble(message: Message) {
 
-    var messageContainerColor =
+    val messageContainerColor =
         if (message.user == "me") MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
 
     Column() {
@@ -249,10 +291,10 @@ fun ChatMessageDividerWithTimeTag() {
 }
 
 @Composable
-fun ChatUserCard(color: Color,onTab: () -> Unit) {
+fun ChatUserCard(onTab: () -> Unit, user: UserChatModel) {
 
     Surface(
-        color =color
+        color = MaterialTheme.colorScheme.onPrimary
     ) {
         Column(modifier = Modifier.clickable {
             onTab()
@@ -264,12 +306,13 @@ fun ChatUserCard(color: Color,onTab: () -> Unit) {
             ) {
                 Surface(
                     shape = RoundedCornerShape(10.dp),
-                    color = MaterialTheme.colorScheme.errorContainer
+                    modifier = Modifier.size(45.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.img),
+                        painter = painterResource(id = if (user.isGroup) R.drawable.ic_group_icon else user.icon),
                         contentDescription = "chat_user_card",
-                        modifier = Modifier.size(45.dp)
+                        modifier = Modifier.size(45.dp),
+                        contentScale = ContentScale.Crop
                     )
                 }
 
@@ -280,27 +323,36 @@ fun ChatUserCard(color: Color,onTab: () -> Unit) {
                 ) {
                     Row {
                         Text(
-                            text = "Javiya raj",
+                            text = user.name,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(0.8f)
                         )
                         Text(
-                            text = "08:40 AM",
+                            text = if (user.lastMessage != null) user.lastMessage.timeStamp else "",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(0.2f),
                             textAlign = TextAlign.End
                         )
                     }
 
-                    Text(text = "hi,how are you", style = MaterialTheme.typography.bodySmall)
+                    val message = if (user.lastMessage != null) {
+
+                        if (user.lastMessage.user == "me" && !user.isGroup) {
+                            "me: ${user.lastMessage.message}"
+                        } else if (user.isGroup) {
+                            "${user.lastMessage.user}: ${user.lastMessage.message}"
+                        } else {
+                            user.lastMessage.message
+                        }
+
+                    } else {
+                        ""
+                    }
+
+                    Text(text = message, style = MaterialTheme.typography.bodySmall)
                 }
 
             }
-            Divider(
-                modifier = Modifier.fillMaxWidth(),
-                thickness = 0.6.dp,
-                color = Color.Gray
-            )
         }
 
     }
@@ -356,5 +408,74 @@ fun ChatUserCardPreview() {
         }
     }
 
+}
 
+@Preview
+@Composable
+
+fun ChatMessageActionGrid(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        tonalElevation = 5.dp,
+        contentColor = MaterialTheme.colorScheme.error,
+        shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+    ) {
+        var text by remember {
+            mutableStateOf(TextFieldValue(""))
+        }
+
+        Column(modifier = modifier) {
+            Row(
+                modifier = modifier
+                    .height(65.dp)
+                    .fillMaxWidth()
+            ) {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                ) {
+
+                    val (textFiled, label, sendIcon) = createRefs()
+
+                    BasicTextField(
+                        value = text,
+                        onValueChange = {
+                            text = it
+                        },
+                        maxLines = 2,
+                        modifier = Modifier
+                            .constrainAs(textFiled) {
+                                top.linkTo(parent.top, margin = 20.dp)
+                                start.linkTo(parent.start, margin = 20.dp)
+                                bottom.linkTo(parent.bottom, margin = 20.dp)
+                            }
+                    )
+                    if (text.text.isEmpty()) {
+                        Text(
+                            text = "Write message here",
+                            style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                            modifier = Modifier.constrainAs(label){
+                                top.linkTo(parent.top, margin = 20.dp)
+                                bottom.linkTo(parent.bottom, margin = 20.dp)
+                                start.linkTo(parent.start, margin = 20.dp)
+                            }
+                        )
+                    }
+
+                    IconButton(onClick = {}, modifier = Modifier.constrainAs(sendIcon) {
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(textFiled.end, margin = 50.dp)
+                    }) {
+                        Icon(imageVector = Icons.Default.Send, contentDescription = "send icon")
+                    }
+                }
+
+            }
+        }
+
+
+    }
 }
