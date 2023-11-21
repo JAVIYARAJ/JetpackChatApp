@@ -8,12 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.jetpackdesign.screens.ChatUserListScreen
 import com.example.jetpackdesign.screens.ChatScreen
+import com.example.jetpackdesign.screens.LoginScreen
+import com.example.jetpackdesign.screens.ProfileScreen
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
 
 
-    NavHost(navController = navHostController, startDestination = Routes.ChatUserScreen.route) {
+    NavHost(navController = navHostController, startDestination = Routes.LoginScreen.route) {
         composable(
             Routes.HomeScreen.route + "/{name}/{icon}",
             arguments = listOf(
@@ -25,7 +27,6 @@ fun NavGraph(navHostController: NavHostController) {
                     type = NavType.IntType
                     defaultValue = R.drawable.ic_user1
                 },
-
             )
         ) { backStack ->
             val name = requireNotNull(backStack.arguments?.getString("name"))
@@ -34,6 +35,43 @@ fun NavGraph(navHostController: NavHostController) {
         }
         composable(Routes.ChatUserScreen.route) {
             ChatUserListScreen(navHostController)
+        }
+
+        composable(Routes.LoginScreen.route) {
+            LoginScreen(navHostController)
+        }
+
+        composable(
+            Routes.ProfileScreen.route + "/{id}/{name}/{email}/{description}/{image}",
+            arguments = listOf(
+                navArgument(name = "id") {
+                    type = NavType.StringType
+                    defaultValue = "111"
+                },
+                navArgument(name = "name") {
+                    type = NavType.StringType
+                    defaultValue = "test user"
+                },
+                navArgument(name = "email") {
+                    type = NavType.StringType
+                    defaultValue = "test@jetpackmail.com"
+                },
+                navArgument(name = "description") {
+                    type = NavType.StringType
+                    defaultValue = "jetpack Developer"
+                },
+                navArgument(name = "image") {
+                    type = NavType.IntType
+                    defaultValue = R.drawable.ic_user1
+                },
+            )
+        ) { backStack ->
+            val id = requireNotNull(backStack.arguments?.getString("id"))
+            val name = requireNotNull(backStack.arguments?.getString("name"))
+            val email = requireNotNull(backStack.arguments?.getString("email"))
+            val description = requireNotNull(backStack.arguments?.getString("description"))
+            val image = requireNotNull(backStack.arguments?.getInt("image"))
+            ProfileScreen(id, name, description, email, image)
         }
     }
 }

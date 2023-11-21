@@ -1,6 +1,7 @@
 package com.example.jetpackdesign.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -38,14 +41,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.jetpackdesign.R
+import com.example.jetpackdesign.data.FakeData
 import com.example.jetpackdesign.data.model.Message
 import com.example.jetpackdesign.data.model.UserChatModel
+import com.example.jetpackdesign.util.Constant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,54 +66,43 @@ fun CustomTopBar(
     isForMainScreen: Boolean = false
 ) {
 
-    CenterAlignedTopAppBar(
-        actions = actions,
-        title = {
-            if (isForMainScreen) {
+    CenterAlignedTopAppBar(actions = actions, title = {
+        if (isForMainScreen) {
+            Text(text = title)
+        } else {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(id = appIcon),
+                    contentDescription = iconDescription,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Fit
+                )
+                Spacer(modifier = Modifier.width(20.dp))
                 Text(text = title)
-            } else {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Image(
-                        painter = painterResource(id = appIcon), contentDescription = "",
-                        modifier = Modifier
-                            .size(35.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Fit
-                    )
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Text(text = title)
-                }
             }
+        }
 
-        },
-        navigationIcon = {
+    }, navigationIcon = {
 
-            IconButton(
-                onClick = onIconTab
-            ) {
-                if (isForMainScreen) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_jetchat_front),
-                        contentDescription = iconDescription,
-                        tint = MaterialTheme.colorScheme.errorContainer
-                    )
+        IconButton(
+            onClick = onIconTab
+        ) {
+            Image(
+                painter = painterResource(id = if (isForMainScreen) R.drawable.ic_app_icon else R.drawable.ic_back_icon),
+                contentDescription = "back icon",
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(CircleShape)
+            )
+        }
 
-                } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_back_icon),
-                        contentDescription = "back icon",
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                    )
-                }
-            }
-
-        })
+    })
 }
 
 @Composable
-fun CustomMessageCard(message: Message) {
+fun CustomMessageCard(message: Message, onUserClick: () -> Unit) {
     Row(
         modifier = Modifier.padding(vertical = 10.dp)
     ) {
@@ -117,11 +113,11 @@ fun CustomMessageCard(message: Message) {
                 .padding(horizontal = 15.dp)
                 .size(45.dp)
                 .border(
-                    1.5.dp, MaterialTheme.colorScheme.primary,
-                    CircleShape
+                    1.5.dp, MaterialTheme.colorScheme.primary, CircleShape
                 )
                 .border(3.dp, Color.White, CircleShape)
                 .clip(CircleShape)
+                .clickable { onUserClick() }
         )
         Column(
             modifier = Modifier
@@ -135,7 +131,6 @@ fun CustomMessageCard(message: Message) {
     }
 }
 
-@Preview()
 @Composable
 fun CustomMessageCardPreview() {
     Row(
@@ -148,8 +143,7 @@ fun CustomMessageCardPreview() {
                 .padding(horizontal = 15.dp)
                 .size(45.dp)
                 .border(
-                    1.5.dp, MaterialTheme.colorScheme.primary,
-                    CircleShape
+                    1.5.dp, MaterialTheme.colorScheme.primary, CircleShape
                 )
                 .border(3.dp, Color.White, CircleShape)
                 .clip(CircleShape)
@@ -169,13 +163,12 @@ fun CustomMessageCardPreview() {
 @Composable
 fun MessageNameAndTime(message: Message) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = message.user, style = MaterialTheme.typography.titleMedium)
+        Text(text = message.user.name, style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.width(10.dp))
         Text(text = message.timeStamp, style = MaterialTheme.typography.bodySmall)
     }
 }
 
-@Preview
 @Composable
 fun MessageNameAndTimePreview() {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -189,12 +182,11 @@ fun MessageNameAndTimePreview() {
 fun ChatMessageBobble(message: Message) {
 
     val messageContainerColor =
-        if (message.user == "me") MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+        if (message.user.id == FakeData.CURRENT_USER.id) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
 
     Column() {
         Surface(
-            color = messageContainerColor,
-            shape = RoundedCornerShape(5f, 30f, 30f, 30f)
+            color = messageContainerColor, shape = RoundedCornerShape(5f, 30f, 30f, 30f)
         ) {
             Text(
                 text = message.message,
@@ -210,7 +202,6 @@ fun ChatMessageBobble(message: Message) {
 
 }
 
-@Preview
 @Composable
 fun ChatMessageBobblePreview() {
 
@@ -234,8 +225,7 @@ fun ChatMessageBobblePreview() {
 @Composable
 fun ChatMessageImageBobble(image: Int, color: Color) {
     Surface(
-        color = color,
-        shape = RoundedCornerShape(5f, 30f, 30f, 30f)
+        color = color, shape = RoundedCornerShape(5f, 30f, 30f, 30f)
     ) {
         Image(
             painter = painterResource(id = image),
@@ -247,7 +237,6 @@ fun ChatMessageImageBobble(image: Int, color: Color) {
 }
 
 
-@Preview
 @Composable
 fun ChatMessageImageBobblePreview() {
     Surface(
@@ -271,13 +260,13 @@ fun RowScope.ChatDivider() {
     )
 }
 
-@Preview
 @Composable
 fun ChatMessageDividerWithTimeTag() {
     Row(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 10.dp)
-            .height(15.dp), verticalAlignment = Alignment.CenterVertically
+            .height(15.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         ChatDivider()
         Text(
@@ -305,8 +294,7 @@ fun ChatUserCard(onTab: () -> Unit, user: UserChatModel) {
                     .padding(vertical = 15.dp, horizontal = 10.dp),
             ) {
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.size(45.dp)
+                    shape = RoundedCornerShape(10.dp), modifier = Modifier.size(45.dp)
                 ) {
                     Image(
                         painter = painterResource(id = if (user.isGroup) R.drawable.ic_group_icon else user.icon),
@@ -337,10 +325,10 @@ fun ChatUserCard(onTab: () -> Unit, user: UserChatModel) {
 
                     val message = if (user.lastMessage != null) {
 
-                        if (user.lastMessage.user == "me" && !user.isGroup) {
+                        if (user.lastMessage.user.id == FakeData.CURRENT_USER.id && !user.isGroup) {
                             "me: ${user.lastMessage.message}"
                         } else if (user.isGroup) {
-                            "${user.lastMessage.user}: ${user.lastMessage.message}"
+                            "${user.lastMessage.user.name}: ${user.lastMessage.message}"
                         } else {
                             user.lastMessage.message
                         }
@@ -361,7 +349,6 @@ fun ChatUserCard(onTab: () -> Unit, user: UserChatModel) {
 }
 
 
-@Preview
 @Composable
 fun ChatUserCardPreview() {
 
@@ -374,8 +361,7 @@ fun ChatUserCardPreview() {
                 .padding(vertical = 15.dp, horizontal = 10.dp),
         ) {
             Surface(
-                shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.errorContainer
+                shape = RoundedCornerShape(10.dp), color = MaterialTheme.colorScheme.errorContainer
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.img),
@@ -410,19 +396,21 @@ fun ChatUserCardPreview() {
 
 }
 
-@Preview
 @Composable
 
-fun ChatMessageActionGrid(modifier: Modifier = Modifier) {
+fun ChatMessageActionGrid(
+    modifier: Modifier = Modifier,
+    textFiledValue: TextFieldValue,
+    textChange: (TextFieldValue) -> Unit,
+    imeSendClick: (Boolean) -> Unit,
+    onIconTab: () -> Unit
+) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         tonalElevation = 5.dp,
         contentColor = MaterialTheme.colorScheme.error,
         shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
     ) {
-        var text by remember {
-            mutableStateOf(TextFieldValue(""))
-        }
 
         Column(modifier = modifier) {
             Row(
@@ -438,11 +426,8 @@ fun ChatMessageActionGrid(modifier: Modifier = Modifier) {
 
                     val (textFiled, label, sendIcon) = createRefs()
 
-                    BasicTextField(
-                        value = text,
-                        onValueChange = {
-                            text = it
-                        },
+                    BasicTextField(value = textFiledValue,
+                        onValueChange = { textChange(it) },
                         maxLines = 2,
                         modifier = Modifier
                             .constrainAs(textFiled) {
@@ -450,24 +435,30 @@ fun ChatMessageActionGrid(modifier: Modifier = Modifier) {
                                 start.linkTo(parent.start, margin = 20.dp)
                                 bottom.linkTo(parent.bottom, margin = 20.dp)
                             }
+                            .width(310.dp),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text, imeAction = ImeAction.Send
+                        ),
+                        keyboardActions = KeyboardActions(onSend = {
+                            imeSendClick(true)
+                        })
                     )
-                    if (text.text.isEmpty()) {
-                        Text(
-                            text = "Write message here",
+                    if (textFiledValue.text.isEmpty()) {
+                        Text(text = Constant.MESSAGE_TEXT_HINT,
                             style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
-                            modifier = Modifier.constrainAs(label){
+                            modifier = Modifier.constrainAs(label) {
                                 top.linkTo(parent.top, margin = 20.dp)
                                 bottom.linkTo(parent.bottom, margin = 20.dp)
                                 start.linkTo(parent.start, margin = 20.dp)
-                            }
-                        )
+                            })
                     }
 
-                    IconButton(onClick = {}, modifier = Modifier.constrainAs(sendIcon) {
+                    IconButton(enabled = textFiledValue.text.isNotEmpty(), onClick = {
+                        onIconTab()
+                    }, modifier = Modifier.constrainAs(sendIcon) {
                         end.linkTo(parent.end)
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
-                        start.linkTo(textFiled.end, margin = 50.dp)
                     }) {
                         Icon(imageVector = Icons.Default.Send, contentDescription = "send icon")
                     }
@@ -476,6 +467,42 @@ fun ChatMessageActionGrid(modifier: Modifier = Modifier) {
             }
         }
 
+
+    }
+}
+
+@Composable
+fun DrawerItem(title: String, icon: Int, onTap: () -> Unit, isActive: Boolean = false) {
+    val background =
+        if (isActive) Modifier.background(MaterialTheme.colorScheme.primaryContainer) else Modifier
+
+    Row(
+        modifier = Modifier
+            .height(56.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .then(background)
+            .clickable {
+                onTap()
+            },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(10.dp))
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = "drawer people icon",
+            modifier = Modifier
+                .size(35.dp)
+                .clip(
+                    RoundedCornerShape(10.dp)
+                )
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            color = if (isActive) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        )
 
     }
 }

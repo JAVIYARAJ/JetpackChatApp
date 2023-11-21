@@ -74,5 +74,7 @@ dependencies {
 
     //constraint layout
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    
+
+    //live data
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 }
