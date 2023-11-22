@@ -1,6 +1,9 @@
 package com.example.jetpackdesign.data
 
 import com.example.jetpackdesign.R
+import com.example.jetpackdesign.data.model.CallFeature
+import com.example.jetpackdesign.data.model.CallHistoryModel
+import com.example.jetpackdesign.data.model.CallType
 import com.example.jetpackdesign.data.model.DrawerItemModel
 import com.example.jetpackdesign.data.model.Message
 import com.example.jetpackdesign.data.model.ProfileItemModel
@@ -151,6 +154,105 @@ class FakeData {
                 lastMessage = null,
                 isGroup = true
             ),
+        )
+
+        val PEOPLE_LIST = listOf(
+            UserModel(
+                id = "102",
+                "Elizabeth",
+                description = "Flutter Developer",
+                email = "elizabeth@jetpackmail.com",
+                image = R.drawable.ic_user2
+            ),
+            UserModel(
+                id = "102",
+                "Ava",
+                description = "Web Developer",
+                email = "ava@jetpackmail.com",
+                image = R.drawable.ic_user2
+            ),
+            UserModel(
+                id = "102",
+                "Olivia",
+                description = "Web Designer",
+                email = "olivia@jetpackmail.com",
+                image = R.drawable.ic_user1
+            ),
+            UserModel(
+                id = "102",
+                "Joseph",
+                description = "Kotlin Developer",
+                email = "joseph@jetpackmail.com",
+                image = R.drawable.ic_user3
+            ),
+        )
+
+        val CALL_HISTORY = listOf(
+            CallHistoryModel(
+                id = "101",
+                user = UserModel(
+                    id = "102",
+                    "Joseph",
+                    description = "Kotlin Developer",
+                    email = "joseph@jetpackmail.com",
+                    image = R.drawable.ic_user3
+                ),
+                callType = CallType.Incoming,
+                callFeature = CallFeature.Audio,
+                timestamp = "Nov 22,10:09 AM"
+            ),
+            CallHistoryModel(
+                id = "201",
+                user = UserModel(
+                    id = "102",
+                    "Ava",
+                    description = "Web Developer",
+                    email = "ava@jetpackmail.com",
+                    image = R.drawable.ic_user2
+                ),
+                callType = CallType.Cancelled,
+                callFeature = CallFeature.Audio,
+                timestamp = "Nov 22,02:09 AM"
+            ),
+            CallHistoryModel(
+                id = "102",
+                user = UserModel(
+                    id = "102",
+                    "Elizabeth",
+                    description = "Flutter Developer",
+                    email = "elizabeth@jetpackmail.com",
+                    image = R.drawable.ic_user2
+                ),
+                callType = CallType.Outgoing,
+                callFeature = CallFeature.Video,
+                timestamp = "Nov 22,08:09 AM"
+            ),
+            CallHistoryModel(
+                id = "501",
+                user = UserModel(
+                    id = "102",
+                    "Joseph",
+                    description = "Kotlin Developer",
+                    email = "joseph@jetpackmail.com",
+                    image = R.drawable.ic_user3
+                ),
+                callType = CallType.Cancelled,
+                callFeature = CallFeature.Audio,
+                timestamp = "Nov 18,10:09 AM"
+            ),
+            CallHistoryModel(
+                id = "302",
+                user = UserModel(
+                    id = "102",
+                    "Olivia",
+                    description = "Web Designer",
+                    email = "olivia@jetpackmail.com",
+                    image = R.drawable.ic_user1
+                ),
+                callType = CallType.Outgoing,
+                callFeature = CallFeature.Video,
+                timestamp = "Nov 17,10:09 AM"
+            )
         )
 
         val MESSAGES = listOf(

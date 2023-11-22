@@ -119,7 +119,7 @@ fun ChatScreen(name: String, icon: Int, controller: NavHostController) {
                             ChatMessageDividerWithTimeTag()
                         }
                         CustomMessageCard(chatState.messages[index], onUserClick = {
-                            controller.navigate(Routes.ProfileScreen.route + "/${chatState.messages[index].user.id}/${chatState.messages[index].user.name}/${chatState.messages[index].user.email}/${chatState.messages[index].user.description}/${chatState.messages[index].user.image}")
+                            controller.navigate(Routes.ProfileRoute.route + "/${chatState.messages[index].user.id}/${chatState.messages[index].user.name}/${chatState.messages[index].user.email}/${chatState.messages[index].user.description}/${chatState.messages[index].user.image}")
                         })
                     }
                 }

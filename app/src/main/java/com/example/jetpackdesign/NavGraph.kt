@@ -6,19 +6,21 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.jetpackdesign.screens.CallScreen
 import com.example.jetpackdesign.screens.ChatUserListScreen
 import com.example.jetpackdesign.screens.ChatScreen
+import com.example.jetpackdesign.screens.HomeScreen
 import com.example.jetpackdesign.screens.LoginScreen
+import com.example.jetpackdesign.screens.PeopleScreen
 import com.example.jetpackdesign.screens.ProfileScreen
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
 
 
-    NavHost(navController = navHostController, startDestination = Routes.LoginScreen.route) {
+    NavHost(navController = navHostController, startDestination = Routes.HomeRoute.route) {
         composable(
-            Routes.HomeScreen.route + "/{name}/{icon}",
-            arguments = listOf(
+            Routes.ChatRoute.route + "/{name}/{icon}", arguments = listOf(
                 navArgument(name = "name") {
                     type = NavType.StringType
                     defaultValue = "test"
@@ -33,16 +35,33 @@ fun NavGraph(navHostController: NavHostController) {
             val icon = requireNotNull(backStack.arguments?.getInt("icon"))
             ChatScreen(name, icon, navHostController)
         }
-        composable(Routes.ChatUserScreen.route) {
+        composable(Routes.ChatUserRoute.route) {
             ChatUserListScreen(navHostController)
         }
 
-        composable(Routes.LoginScreen.route) {
+        composable(Routes.HomeRoute.route) {
+            HomeScreen(navHostController)
+        }
+
+        composable(Routes.LoginRoute.route) {
             LoginScreen(navHostController)
         }
 
+        composable(Routes.PeopleRoute.route) {
+            PeopleScreen(navHostController)
+        }
+
+        composable(Routes.CallRoute.route) {
+            CallScreen(navHostController)
+        }
+
+
+        composable(Routes.CallRoute.route) {
+            CallScreen(navHostController)
+        }
+
         composable(
-            Routes.ProfileScreen.route + "/{id}/{name}/{email}/{description}/{image}",
+            Routes.ProfileRoute.route + "/{id}/{name}/{email}/{description}/{image}",
             arguments = listOf(
                 navArgument(name = "id") {
                     type = NavType.StringType

@@ -1,10 +1,14 @@
 package com.example.jetpackdesign
 
 sealed class Routes(val route: String) {
-    object HomeScreen : Routes("home_route")
-    object ChatUserScreen : Routes("chat_user_screen_route")
-    object ProfileScreen : Routes("profile")
-    object LoginScreen : Routes("login")
+    object HomeRoute : Routes("home_route")
+
+    object ChatRoute : Routes("chat_route")
+    object ChatUserRoute : Routes("chat_user_screen_route")
+    object ProfileRoute : Routes("profile_route")
+    object LoginRoute : Routes("login_route")
+    object PeopleRoute : Routes("people_route")
+    object CallRoute : Routes("call_route")
 
 
 }

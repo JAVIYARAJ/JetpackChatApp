@@ -90,7 +90,7 @@ fun CustomTopBar(
             onClick = onIconTab
         ) {
             Image(
-                painter = painterResource(id = if (isForMainScreen) R.drawable.ic_app_icon else R.drawable.ic_back_icon),
+                painter = painterResource(id = if (isForMainScreen) appIcon else R.drawable.ic_back_icon),
                 contentDescription = "back icon",
                 modifier = Modifier
                     .size(30.dp)
