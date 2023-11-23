@@ -30,9 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.jetpackdesign.R
-import com.example.jetpackdesign.component.CustomTopBar
+import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
-import com.example.jetpackdesign.data.FakeData
 import com.example.jetpackdesign.data.model.ProfileItemModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +57,7 @@ fun ProfileScreen(id: String, name: String, description: String, email: String, 
 
     Scaffold(
         topBar = {
-            CustomTopBar(
+            CustomCenterTopBar(
                 title = "Profile",
                 actions = {
                     IconButton(onClick = {

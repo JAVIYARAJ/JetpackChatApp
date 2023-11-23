@@ -13,10 +13,10 @@ import com.example.jetpackdesign.screens.HomeScreen
 import com.example.jetpackdesign.screens.LoginScreen
 import com.example.jetpackdesign.screens.PeopleScreen
 import com.example.jetpackdesign.screens.ProfileScreen
+import com.example.jetpackdesign.screens.SelectPeopleScreen
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
-
 
     NavHost(navController = navHostController, startDestination = Routes.HomeRoute.route) {
         composable(
@@ -58,6 +58,10 @@ fun NavGraph(navHostController: NavHostController) {
 
         composable(Routes.CallRoute.route) {
             CallScreen(navHostController)
+        }
+
+        composable(Routes.SelectPeopleRoute.route) {
+            SelectPeopleScreen(navHostController)
         }
 
         composable(

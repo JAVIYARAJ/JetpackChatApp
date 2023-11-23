@@ -38,6 +38,8 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding=true
+        viewBinding =true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -59,6 +61,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -69,6 +76,7 @@ dependencies {
 
     //navigation
     val nav_version = "2.7.5"
+    val fragment_version = "1.6.2"
 
     implementation ("androidx.navigation:navigation-compose:$nav_version")
 
@@ -77,4 +85,15 @@ dependencies {
 
     //live data
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+    //fragment
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+    //view binding
+    implementation ("androidx.compose.ui:ui-viewbinding:1.5.4")
+
+    //shimmer
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
+
+    
 }

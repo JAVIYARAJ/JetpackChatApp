@@ -33,7 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.jetpackdesign.R
-import com.example.jetpackdesign.component.CustomTopBar
+import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
 import com.example.jetpackdesign.data.FakeData
 import com.example.jetpackdesign.data.model.UserModel
@@ -52,24 +52,16 @@ fun PeopleScreen(controller: NavHostController) {
         }
     }
 
-    Scaffold(
-        topBar = {
-            CustomTopBar(
-                title = "People",
-                onIconTab = {
-                    controller.popBackStack()
-                },
-                appIcon = R.drawable.ic_back_icon,
-                iconDescription = "app_icon",
-                actions = {
-                    IconButton(onClick = { functionalityDialog = true }) {
-                        Icon(Icons.Filled.Search, "people search icon")
-                    }
-                },
-                isForMainScreen = true
-            )
-        }
-    ) { paddingValues ->
+    Scaffold(topBar = {
+        CustomCenterTopBar(title = "People", onIconTab = {
+            controller.popBackStack()
+        }, appIcon = R.drawable.ic_back_icon, iconDescription = "app_icon", actions = {
+            IconButton(onClick = { functionalityDialog = true }) {
+                Icon(Icons.Filled.Search, "people search icon")
+            }
+        }, isForMainScreen = true
+        )
+    }) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(FakeData.PEOPLE_LIST) {
                 PeopleCard(it)
@@ -80,40 +72,43 @@ fun PeopleScreen(controller: NavHostController) {
 
 
 @Composable
-fun PeopleCard(model: UserModel) {
+fun PeopleCard(model: UserModel,modifier: Modifier=Modifier) {
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.fillMaxWidth()
     ) {
-
-        Image(
-            painter = painterResource(id = model.image),
-            contentDescription = "chat_user_card",
-            modifier = Modifier
-                .size(45.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        Column(
-            modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp)
-                .weight(1f),
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = model.name,
-                style = MaterialTheme.typography.bodyLarge,
+            Image(
+                painter = painterResource(id = model.image),
+                contentDescription = "chat_user_card",
+                modifier = Modifier
+                    .size(45.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(
-                text = model.description,
-                style = MaterialTheme.typography.bodySmall,
-            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp)
+                    .weight(1f),
+            ) {
+                Text(
+                    text = model.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = model.description,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
     }
 

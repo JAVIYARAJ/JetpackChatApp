@@ -36,7 +36,7 @@ import com.example.jetpackdesign.Routes
 import com.example.jetpackdesign.component.ChatMessageActionGrid
 import com.example.jetpackdesign.component.ChatMessageDividerWithTimeTag
 import com.example.jetpackdesign.component.CustomMessageCard
-import com.example.jetpackdesign.component.CustomTopBar
+import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
 import com.example.jetpackdesign.component.JumpToCard
 import com.example.jetpackdesign.data.FakeData
@@ -65,7 +65,7 @@ fun ChatScreen(name: String, icon: Int, controller: NavHostController) {
     }
 
     Scaffold(topBar = {
-        CustomTopBar(
+        CustomCenterTopBar(
             title = name,
             actions = {
                 Image(

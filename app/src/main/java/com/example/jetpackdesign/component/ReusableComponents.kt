@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -30,23 +30,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.jetpackdesign.R
 import com.example.jetpackdesign.data.FakeData
@@ -57,18 +55,17 @@ import com.example.jetpackdesign.util.Constant
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun CustomTopBar(
+fun CustomCenterTopBar(
     title: String,
     actions: @Composable RowScope.() -> Unit = {},
     onIconTab: () -> Unit,
     appIcon: Int,
     iconDescription: String,
-    isForMainScreen: Boolean = false
+    isForMainScreen: Boolean = false,
 ) {
-
     CenterAlignedTopAppBar(actions = actions, title = {
         if (isForMainScreen) {
-            Text(text = title)
+            Text(text = title, style = TextStyle(color = Color(69, 179, 157), fontSize = 25.sp))
         } else {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Image(
@@ -85,7 +82,6 @@ fun CustomTopBar(
         }
 
     }, navigationIcon = {
-
         IconButton(
             onClick = onIconTab
         ) {
@@ -101,13 +97,25 @@ fun CustomTopBar(
     })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomLeftSideTopBar(title: String, actions: @Composable RowScope.() -> Unit = {}) {
+    TopAppBar(
+        title = {
+            Text(
+                text = title, style = TextStyle(color = Color(69, 179, 157), fontSize = 25.sp)
+            )
+        }, actions = actions
+    )
+
+}
+
 @Composable
 fun CustomMessageCard(message: Message, onUserClick: () -> Unit) {
     Row(
         modifier = Modifier.padding(vertical = 10.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.img),
+        Image(painter = painterResource(id = R.drawable.img),
             contentDescription = "message_image",
             modifier = Modifier
                 .padding(horizontal = 15.dp)
@@ -117,8 +125,7 @@ fun CustomMessageCard(message: Message, onUserClick: () -> Unit) {
                 )
                 .border(3.dp, Color.White, CircleShape)
                 .clip(CircleShape)
-                .clickable { onUserClick() }
-        )
+                .clickable { onUserClick() })
         Column(
             modifier = Modifier
                 .padding(end = 10.dp)
@@ -484,8 +491,7 @@ fun DrawerItem(title: String, icon: Int, onTap: () -> Unit, isActive: Boolean = 
             .then(background)
             .clickable {
                 onTap()
-            },
-        verticalAlignment = Alignment.CenterVertically
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(10.dp))
         Image(

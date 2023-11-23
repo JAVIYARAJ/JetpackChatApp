@@ -13,6 +13,11 @@
         android:theme="@style/Theme.JetpackDesign"
         tools:targetApi="31">
         <activity
+            android:name=".NavActivity"
+            android:exported="false"
+            android:label="@string/title_activity_nav"
+            android:theme="@style/Theme.JetpackDesign"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

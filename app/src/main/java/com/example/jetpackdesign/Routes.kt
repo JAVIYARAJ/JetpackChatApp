@@ -9,6 +9,6 @@ sealed class Routes(val route: String) {
     object LoginRoute : Routes("login_route")
     object PeopleRoute : Routes("people_route")
     object CallRoute : Routes("call_route")
-
+    object SelectPeopleRoute : Routes("select_people_route")
 
 }
