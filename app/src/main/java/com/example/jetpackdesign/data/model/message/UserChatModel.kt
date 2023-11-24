@@ -1,4 +1,6 @@
-package com.example.jetpackdesign.data.model
+package com.example.jetpackdesign.data.model.message
+
+import com.example.jetpackdesign.data.model.message.Message
 
 data class UserChatModel(
     var name: String,

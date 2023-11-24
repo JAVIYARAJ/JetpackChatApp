@@ -36,7 +36,7 @@ import com.example.jetpackdesign.R
 import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
 import com.example.jetpackdesign.data.FakeData
-import com.example.jetpackdesign.data.model.UserModel
+import com.example.jetpackdesign.data.model.common.UserModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +72,7 @@ fun PeopleScreen(controller: NavHostController) {
 
 
 @Composable
-fun PeopleCard(model: UserModel,modifier: Modifier=Modifier) {
+fun PeopleCard(model: UserModel, modifier: Modifier=Modifier) {
 
     Surface(
         color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.fillMaxWidth()

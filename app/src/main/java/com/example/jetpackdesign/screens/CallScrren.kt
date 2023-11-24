@@ -39,9 +39,9 @@ import com.example.jetpackdesign.R
 import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
 import com.example.jetpackdesign.data.FakeData
-import com.example.jetpackdesign.data.model.CallFeature
-import com.example.jetpackdesign.data.model.CallHistoryModel
-import com.example.jetpackdesign.data.model.CallType
+import com.example.jetpackdesign.data.model.call.CallFeature
+import com.example.jetpackdesign.data.model.call.CallHistoryModel
+import com.example.jetpackdesign.data.model.call.CallType
 
 @OptIn(ExperimentalMaterial3Api::class)
 

@@ -1,7 +1,7 @@
 package com.example.jetpackdesign.data.state
 
 import androidx.compose.runtime.toMutableStateList
-import com.example.jetpackdesign.data.model.Message
+import com.example.jetpackdesign.data.model.message.Message
 
 class MessageState(initialMessages: List<Message>) {
 

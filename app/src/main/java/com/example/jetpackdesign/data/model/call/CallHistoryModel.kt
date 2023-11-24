@@ -1,4 +1,6 @@
-package com.example.jetpackdesign.data.model
+package com.example.jetpackdesign.data.model.call
+
+import com.example.jetpackdesign.data.model.common.UserModel
 
 data class CallHistoryModel(
     val id: String,

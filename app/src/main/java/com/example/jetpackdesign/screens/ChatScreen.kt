@@ -40,7 +40,7 @@ import com.example.jetpackdesign.component.CustomCenterTopBar
 import com.example.jetpackdesign.component.FunctionalityDialog
 import com.example.jetpackdesign.component.JumpToCard
 import com.example.jetpackdesign.data.FakeData
-import com.example.jetpackdesign.data.model.Message
+import com.example.jetpackdesign.data.model.message.Message
 import com.example.jetpackdesign.data.state.MessageState
 import com.example.jetpackdesign.util.Constant
 import kotlinx.coroutines.launch

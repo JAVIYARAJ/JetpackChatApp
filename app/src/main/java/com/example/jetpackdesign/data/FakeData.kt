@@ -1,14 +1,13 @@
 package com.example.jetpackdesign.data
 
 import com.example.jetpackdesign.R
-import com.example.jetpackdesign.data.model.CallFeature
-import com.example.jetpackdesign.data.model.CallHistoryModel
-import com.example.jetpackdesign.data.model.CallType
-import com.example.jetpackdesign.data.model.DrawerItemModel
-import com.example.jetpackdesign.data.model.Message
-import com.example.jetpackdesign.data.model.ProfileItemModel
-import com.example.jetpackdesign.data.model.UserChatModel
-import com.example.jetpackdesign.data.model.UserModel
+import com.example.jetpackdesign.data.model.call.CallFeature
+import com.example.jetpackdesign.data.model.call.CallHistoryModel
+import com.example.jetpackdesign.data.model.call.CallType
+import com.example.jetpackdesign.data.model.common.DrawerItemModel
+import com.example.jetpackdesign.data.model.message.Message
+import com.example.jetpackdesign.data.model.message.UserChatModel
+import com.example.jetpackdesign.data.model.common.UserModel
 import com.example.jetpackdesign.util.Constant
 
 class FakeData {

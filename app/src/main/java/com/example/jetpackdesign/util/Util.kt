@@ -1,8 +1,9 @@
 package com.example.jetpackdesign.util
 
 import android.util.Patterns
-import com.example.jetpackdesign.util.Util.Companion.isEmailValid
-import javax.xml.validation.Validator
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class Util {
 
@@ -12,5 +13,10 @@ class Util {
             return Patterns.EMAIL_ADDRESS.matcher(this).find()
         }
 
+        fun defaultDate(): String {
+            val dateFormat = SimpleDateFormat(Constant.STANDARD_FORMAT, Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            return dateFormat.format(calendar.timeInMillis)
+        }
     }
 }

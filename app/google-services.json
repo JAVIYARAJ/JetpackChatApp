@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "613024459647",
+    "project_id": "jetpackchatapp-f89cd",
+    "storage_bucket": "jetpackchatapp-f89cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613024459647:android:5ac81957a7d2b5b6be084a",
+        "android_client_info": {
+          "package_name": "com.example.jetpackdesign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZtmDCnGQ755gtaTzkh5PiXZLRjJN015g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

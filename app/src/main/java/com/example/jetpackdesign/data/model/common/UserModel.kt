@@ -1,4 +1,4 @@
-package com.example.jetpackdesign.data.model
+package com.example.jetpackdesign.data.model.common
 
 data class UserModel(
     val id: String,

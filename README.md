@@ -40,6 +40,6 @@ Jetpack chat app (only design)
 
 <img src="screenshots/img4.png" width="270"/> <img src="screenshots/img5.png" width="270"/> <img src="screenshots/img6.png" width="270"/>
 
-<img src="screenshots/img7.png" width="270"/>
+<img src="screenshots/img7.png" width="270"/> <img src="screenshots/img8.png" width="270"/>
 
 

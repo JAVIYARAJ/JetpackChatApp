@@ -14,9 +14,12 @@ import com.example.jetpackdesign.screens.LoginScreen
 import com.example.jetpackdesign.screens.PeopleScreen
 import com.example.jetpackdesign.screens.ProfileScreen
 import com.example.jetpackdesign.screens.SelectPeopleScreen
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
+
 
     NavHost(navController = navHostController, startDestination = Routes.HomeRoute.route) {
         composable(
@@ -94,7 +97,7 @@ fun NavGraph(navHostController: NavHostController) {
             val email = requireNotNull(backStack.arguments?.getString("email"))
             val description = requireNotNull(backStack.arguments?.getString("description"))
             val image = requireNotNull(backStack.arguments?.getInt("image"))
-            ProfileScreen(id, name, description, email, image)
+            ProfileScreen(name, description, email, image)
         }
     }
 }

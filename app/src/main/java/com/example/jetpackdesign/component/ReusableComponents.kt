@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -48,9 +47,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.jetpackdesign.R
 import com.example.jetpackdesign.data.FakeData
-import com.example.jetpackdesign.data.model.Message
-import com.example.jetpackdesign.data.model.UserChatModel
+import com.example.jetpackdesign.data.model.message.Message
+import com.example.jetpackdesign.data.model.message.UserChatModel
 import com.example.jetpackdesign.util.Constant
+import com.wajahatkarim.flippable.FlipAnimationType
+import com.wajahatkarim.flippable.Flippable
+import com.wajahatkarim.flippable.FlippableController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +109,6 @@ fun CustomLeftSideTopBar(title: String, actions: @Composable RowScope.() -> Unit
             )
         }, actions = actions
     )
-
 }
 
 @Composable
@@ -511,4 +512,23 @@ fun DrawerItem(title: String, icon: Int, onTap: () -> Unit, isActive: Boolean = 
         )
 
     }
+}
+
+@Composable
+fun FlippableCard(
+    front: @Composable () -> Unit,
+    back: @Composable () -> Unit,
+    controller: FlippableController,
+    modifier: Modifier,
+    flipAnimationType: FlipAnimationType,
+    flipOnTouch: Boolean = true
+) {
+    Flippable(
+        frontSide = { front() },
+        backSide = { back() },
+        flipController = controller,
+        modifier = modifier,
+        flipAnimationType = flipAnimationType,
+        flipOnTouch = flipOnTouch
+    )
 }

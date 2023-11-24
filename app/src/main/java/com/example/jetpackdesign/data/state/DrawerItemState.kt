@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.jetpackdesign.data.FakeData
-import com.example.jetpackdesign.data.model.DrawerItemModel
+import com.example.jetpackdesign.data.model.common.DrawerItemModel
 
 class DrawerItemState(private val drawerItems: List<DrawerItemModel>) {
 

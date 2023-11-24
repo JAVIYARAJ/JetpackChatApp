@@ -38,8 +38,8 @@ android {
     }
     buildFeatures {
         compose = true
-        dataBinding=true
-        viewBinding =true
+        dataBinding = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -78,10 +78,10 @@ dependencies {
     val nav_version = "2.7.5"
     val fragment_version = "1.6.2"
 
-    implementation ("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
     //constraint layout
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     //live data
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
@@ -90,10 +90,25 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
 
     //view binding
-    implementation ("androidx.compose.ui:ui-viewbinding:1.5.4")
+    implementation("androidx.compose.ui:ui-viewbinding:1.5.4")
 
     //shimmer
     implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
 
-    
+    //flip container
+    implementation("com.wajahatkarim:flippable:1.0.6")
+
+
+    //firebase
+    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
+    implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
+
+    //coil image
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //live data
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
 }
