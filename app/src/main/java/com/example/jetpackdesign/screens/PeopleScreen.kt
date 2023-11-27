@@ -72,7 +72,7 @@ fun PeopleScreen(controller: NavHostController) {
 
 
 @Composable
-fun PeopleCard(model: UserModel, modifier: Modifier=Modifier) {
+fun PeopleCard(model: UserModel, modifier: Modifier = Modifier) {
 
     Surface(
         color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.fillMaxWidth()
@@ -111,6 +111,5 @@ fun PeopleCard(model: UserModel, modifier: Modifier=Modifier) {
             }
         }
     }
-
 
 }
