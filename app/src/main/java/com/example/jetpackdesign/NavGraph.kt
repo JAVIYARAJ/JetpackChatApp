@@ -14,6 +14,7 @@ import com.example.jetpackdesign.screens.LoginScreen
 import com.example.jetpackdesign.screens.PeopleScreen
 import com.example.jetpackdesign.screens.ProfileScreen
 import com.example.jetpackdesign.screens.SelectPeopleScreen
+import com.example.jetpackdesign.screens.TestScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -21,7 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 fun NavGraph(navHostController: NavHostController) {
 
 
-    NavHost(navController = navHostController, startDestination = Routes.HomeRoute.route) {
+    NavHost(navController = navHostController, startDestination = Routes.TestRoute.route) {
         composable(
             Routes.ChatRoute.route + "/{name}/{icon}", arguments = listOf(
                 navArgument(name = "name") {
@@ -65,6 +66,10 @@ fun NavGraph(navHostController: NavHostController) {
 
         composable(Routes.SelectPeopleRoute.route) {
             SelectPeopleScreen(navHostController)
+        }
+
+        composable(Routes.TestRoute.route) {
+            TestScreen()
         }
 
         composable(

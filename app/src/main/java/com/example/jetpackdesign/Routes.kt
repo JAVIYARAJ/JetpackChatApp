@@ -2,6 +2,7 @@ package com.example.jetpackdesign
 
 sealed class Routes(val route: String) {
     object HomeRoute : Routes("home_route")
+    object TestRoute : Routes("test_route")
 
     object ChatRoute : Routes("chat_route")
     object ChatUserRoute : Routes("chat_user_screen_route")

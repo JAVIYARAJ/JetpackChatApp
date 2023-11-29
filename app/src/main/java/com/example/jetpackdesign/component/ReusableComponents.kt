@@ -1,9 +1,18 @@
 package com.example.jetpackdesign.component
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -20,28 +29,47 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -531,4 +559,174 @@ fun FlippableCard(
         flipAnimationType = flipAnimationType,
         flipOnTouch = flipOnTouch
     )
+}
+
+@Preview
+@Composable
+fun CustomTextString() {
+
+    val colors1 = listOf(Color(0xFF9CCC65), Color(0xFFF5CBA7), Color(0xFF48C9B0))
+    val colors2 = listOf(Color(0XFFCB4303), Color(0xFFA569BD), Color(0xFFF4D03F))
+
+    Text(text = buildAnnotatedString {
+        withStyle(
+            SpanStyle(
+                Brush.linearGradient(colors1), fontSize = 20.sp
+            )
+        ) {
+            append("J")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 15.sp,
+                brush = Brush.linearGradient(colors2),
+            )
+        ) {
+            append("etpack")
+        }
+
+        withStyle(
+            SpanStyle(
+                Brush.linearGradient(colors1), fontSize = 20.sp
+            )
+        ) {
+            append(" C")
+        }
+        withStyle(
+            SpanStyle(
+                fontSize = 15.sp,
+                brush = Brush.linearGradient(colors2),
+            )
+        ) {
+            append("ompose")
+        }
+
+
+    })
+}
+
+@Preview
+@Composable
+fun GradientText() {
+
+    val colors = listOf(Color(0xFF9CCC65), Color(0xFFF5CBA7), Color(0xFF48C9B0))
+
+    Text(
+        text = "Custom Text",
+        style = MaterialTheme.typography.titleLarge.copy(
+            brush = Brush.linearGradient(colors), fontSize = 30.sp
+        ),
+    )
+
+}
+
+enum class AnimationType {
+    DOWN,
+    Up
+}
+
+
+@Preview
+@Composable
+fun AnimatedText() {
+
+    var count by remember {
+        mutableIntStateOf(0)
+    }
+
+    var animationType by remember {
+        mutableStateOf(AnimatedContentTransitionScope.SlideDirection.Up)
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+        val colors = listOf(Color(0XFFCB4303), Color(0xFFA569BD), Color(0xFFF4D03F))
+
+        IconButton(onClick = {
+            if (count > 0) {
+                animationType = AnimatedContentTransitionScope.SlideDirection.Down
+                count--
+            }
+        }) {
+            Icon(Icons.Default.KeyboardArrowLeft, "down_icon", modifier = Modifier.size(30.dp))
+        }
+        AnimatedContent(
+            targetState = count,
+            transitionSpec = {
+                slideIntoContainer(
+                    towards = animationType,
+                    animationSpec = tween(durationMillis = 200)
+                ) togetherWith ExitTransition.None
+            },
+            label = "",
+        ) {
+            Text(
+                text = "$it",
+                style = MaterialTheme.typography.titleLarge.copy(brush = Brush.linearGradient(colors = colors)),
+            )
+        }
+        IconButton(onClick = {
+            animationType = AnimatedContentTransitionScope.SlideDirection.Up
+            count++
+        }) {
+            Icon(Icons.Default.KeyboardArrowRight, "up_icon", modifier = Modifier.size(30.dp))
+        }
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun ExposedDropdownMenuSample() {
+    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf(options[0]) }
+    // We want to react on tap/press on TextField to show menu
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+    ) {
+        TextField(
+            // The `menuAnchor` modifier must be passed to the text field for correctness.
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
+            readOnly = true,
+            value = selectedOptionText,
+            onValueChange = {},
+            label = { Text("Label") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent
+            ),
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption, modifier = Modifier.fillMaxWidth()) },
+                    onClick = {
+                        selectedOptionText = selectionOption
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
 }
