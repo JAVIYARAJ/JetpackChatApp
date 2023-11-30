@@ -111,4 +111,7 @@ dependencies {
     //live data
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
+
+    implementation("com.himanshoe:kalendar:1.3.0")
+
 }

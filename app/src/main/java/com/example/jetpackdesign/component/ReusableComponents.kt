@@ -1,5 +1,9 @@
 package com.example.jetpackdesign.component
 
+import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -8,21 +12,35 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.with
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -32,6 +50,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -48,16 +67,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -78,9 +101,13 @@ import com.example.jetpackdesign.data.FakeData
 import com.example.jetpackdesign.data.model.message.Message
 import com.example.jetpackdesign.data.model.message.UserChatModel
 import com.example.jetpackdesign.util.Constant
+import com.example.jetpackdesign.util.Constant.Companion.MONTHS
+import com.example.jetpackdesign.util.ModifierConstant.widthModifier
+import com.example.jetpackdesign.util.Util
 import com.wajahatkarim.flippable.FlipAnimationType
 import com.wajahatkarim.flippable.Flippable
 import com.wajahatkarim.flippable.FlippableController
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -561,7 +588,6 @@ fun FlippableCard(
     )
 }
 
-@Preview
 @Composable
 fun CustomTextString() {
 
@@ -605,7 +631,6 @@ fun CustomTextString() {
     })
 }
 
-@Preview
 @Composable
 fun GradientText() {
 
@@ -620,13 +645,6 @@ fun GradientText() {
 
 }
 
-enum class AnimationType {
-    DOWN,
-    Up
-}
-
-
-@Preview
 @Composable
 fun AnimatedText() {
 
@@ -658,8 +676,7 @@ fun AnimatedText() {
             targetState = count,
             transitionSpec = {
                 slideIntoContainer(
-                    towards = animationType,
-                    animationSpec = tween(durationMillis = 200)
+                    towards = animationType, animationSpec = tween(durationMillis = 200)
                 ) togetherWith ExitTransition.None
             },
             label = "",
@@ -680,7 +697,7 @@ fun AnimatedText() {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+
 @Composable
 fun ExposedDropdownMenuSample() {
     val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
@@ -718,7 +735,11 @@ fun ExposedDropdownMenuSample() {
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption, modifier = Modifier.fillMaxWidth()) },
+                    text = {
+                        Text(
+                            selectionOption, modifier = Modifier.fillMaxWidth()
+                        )
+                    },
                     onClick = {
                         selectedOptionText = selectionOption
                         expanded = false
@@ -726,6 +747,390 @@ fun ExposedDropdownMenuSample() {
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun CustomCalender() {
+
+    val listOfDaysTitle = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    val currentMonth = Util.getMonth()
+    val currentYear = Util.getYear()
+    val currentDay = Util.getDay()
+
+    var month by remember {
+        mutableIntStateOf(currentMonth)
+    }
+
+    val totalDaysCount by remember {
+        derivedStateOf {
+            Util.getCurrentMonthDays(year = currentYear, month = month)
+        }
+    }
+
+    var year by remember {
+        mutableIntStateOf(currentYear)
+    }
+    val disableDayCount by remember {
+        derivedStateOf {
+            listOfDaysTitle.indexOf(Util.getFirstDayOfMonth(year, month))
+        }
+    }
+
+
+    val calenderTitle by remember {
+        derivedStateOf {
+            "${MONTHS[month - 1]} $year"
+        }
+    }
+
+    var animationType by remember {
+        mutableStateOf(AnimatedContentTransitionScope.SlideDirection.Up)
+    }
+
+    val pagerState = rememberPagerState(initialPage = month - 1) {
+        12
+    }
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(pagerState.currentPage) {
+        when (pagerState.currentPage) {
+            12 -> {
+                Log.e("TAG", "CustomCalender: month-1 and year ${year++}")
+            }
+
+            1 -> {
+                Log.e("TAG", "CustomCalender: month-12 and year ${year--}")
+            }
+
+            else -> {
+                Log.e("TAG", "CustomCalender: month-${pagerState.currentPage + 1}")
+            }
+        }
+        //month = pagerState.currentPage + 1
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 5.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = {
+                animationType = AnimatedContentTransitionScope.SlideDirection.Down
+                if (month == 1) {
+                    month = 12
+                    year -= 1
+                } else {
+                    month -= 1
+                }
+            }) {
+                Icon(Icons.Default.KeyboardArrowLeft, "down_icon", modifier = Modifier.size(30.dp))
+            }
+            AnimatedContent(
+                targetState = calenderTitle,
+                transitionSpec = {
+                    slideIntoContainer(
+                        towards = animationType,
+                        animationSpec = tween(durationMillis = 200)
+                    ) togetherWith ExitTransition.None
+                },
+                modifier = Modifier.width(200.dp),
+                label = "",
+            ) {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = widthModifier,
+                    textAlign = TextAlign.Center
+                )
+            }
+            IconButton(onClick = {
+                animationType = AnimatedContentTransitionScope.SlideDirection.Up
+
+                if (month == 12) {
+                    year += 1
+                    month = 1
+                } else {
+                    month += 1
+                }
+
+            }) {
+                Icon(Icons.Default.KeyboardArrowRight, "up_icon", modifier = Modifier.size(30.dp))
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 2.5.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(listOfDaysTitle.size) {
+                Text(
+                    text = listOfDaysTitle[it],
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        /*
+        HorizontalPager(state = pagerState, modifier = widthModifier) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(count = 7),
+                content = {
+                    items(disableDayCount) {
+                        Surface {
+
+                        }
+                    }
+                    items(totalDaysCount) {
+                        val dayValue = it + 1
+                        DayCard(
+                            day = dayValue.toString(),
+                            isCurrentDay = currentMonth == month && dayValue == currentDay,
+                            isAnyEvent = it == 15,
+                            onTap = {
+
+                            }
+                        )
+
+                    }
+                },
+                contentPadding = PaddingValues(3.dp),
+            )
+        }
+
+         */
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(count = 7),
+            content = {
+                items(disableDayCount) {
+                    Surface {
+
+                    }
+                }
+                items(totalDaysCount) {
+                    val dayValue = it + 1
+                    DayCard(
+                        day = dayValue.toString(),
+                        isCurrentDay = currentMonth == month && dayValue == currentDay,
+                        isAnyEvent = it == 15,
+                        onTap = {
+
+                        }
+                    )
+
+                }
+            },
+            contentPadding = PaddingValues(3.dp),
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Event",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(horizontal = 5.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        LazyColumn(modifier = widthModifier) {
+            items(15) {
+                CalenderEventCard()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DayCard(
+    modifier: Modifier = Modifier,
+    day: String,
+    isCurrentDay: Boolean = false,
+    isAnyEvent: Boolean = false,
+    onTap: () -> Unit = {},
+) {
+
+    val colors = listOf(Color(0XFFCB4303), Color(0xFFA569BD), Color(0xFFF4D03F))
+
+    val customBorder = if (isCurrentDay) {
+        BorderStroke(2.dp, brush = Brush.linearGradient(colors))
+    } else {
+        BorderStroke(0.dp, brush = Brush.linearGradient(colors))
+    }
+
+
+    Surface(
+        shape = RoundedCornerShape(5.dp),
+        color = MaterialTheme.colorScheme.errorContainer,
+        modifier = modifier
+            .height(60.dp)
+            .padding(2.5.dp)
+            .clickable { onTap() },
+        border = customBorder,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .then(Modifier.padding(10.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+
+            ) {
+            Text(
+                text = day,
+                style = MaterialTheme.typography.titleMedium,
+
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(0.6f)
+            )
+            if (isAnyEvent) {
+                Surface(
+                    modifier = Modifier
+                        .size(10.dp),
+                    shape = CircleShape,
+                    color = Color.Gray
+                ) {
+
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CalenderEventCard() {
+    Surface(
+        modifier = widthModifier.padding(vertical = 2.5.dp, horizontal = 3.dp),
+        shape = RoundedCornerShape(5.dp),
+        color = MaterialTheme.colorScheme.errorContainer
+    ) {
+        Row(modifier = widthModifier.padding(horizontal = 10.dp, vertical = 10.dp)) {
+            Column(modifier = widthModifier.weight(0.9f)) {
+                Text(text = "Project Review", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "21-03-2023", style = MaterialTheme.typography.titleSmall)
+            }
+            IconButton(onClick = {}, modifier = Modifier.weight(0.1f)) {
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "more_button")
+            }
+        }
+    }
+}
+
+@Composable
+fun DayCardView(
+    modifier: Modifier = Modifier,
+    day: String,
+    isCurrentDay: Boolean = false,
+    isAnyEvent: Boolean = false,
+    onTap: () -> Unit = {},
+) {
+
+    val colors = listOf(Color(0XFFCB4303), Color(0xFFA569BD), Color(0xFFF4D03F))
+
+    val customBorder = if (isCurrentDay) {
+        BorderStroke(2.dp, brush = Brush.linearGradient(colors))
+    } else {
+        BorderStroke(0.dp, brush = Brush.linearGradient(colors))
+    }
+
+
+    Surface(
+        shape = RoundedCornerShape(5.dp),
+        color = MaterialTheme.colorScheme.errorContainer,
+        modifier = modifier
+            .height(30.dp)
+            .padding(2.5.dp)
+            .clickable { onTap() },
+        border = customBorder,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .then(Modifier.padding(10.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+
+            ) {
+            Text(
+                text = day,
+                style = MaterialTheme.typography.titleSmall,
+
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(0.6f)
+            )
+            if (isAnyEvent) {
+                Surface(
+                    modifier = Modifier
+                        .size(10.dp),
+                    shape = CircleShape,
+                    color = Color.Gray
+                ) {
+
+                }
+            }
+        }
+    }
+}
+
+@SuppressLint("NewApi")
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MainMonthView() {
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = 3),
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+
+        val listOfDaysTitle = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+        items(MONTHS.size) {
+            Surface(modifier = Modifier.padding(horizontal = 5.dp)) {
+                Column(modifier = widthModifier) {
+                    Text(text = MONTHS[it], style = MaterialTheme.typography.titleSmall)
+
+                    val month = it + 1
+                    val disableCount=Util.getFirstDayOfMonth(2023, month)
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(count = 7),
+                        content = {
+                            items(listOfDaysTitle.indexOf(disableCount)) {
+                                Surface {
+
+                                }
+                            }
+                            items(Util.getCurrentMonthDays(2023,month)) {
+                                val dayValue = it + 1
+                                Text(text = dayValue.toString(), textAlign = TextAlign.Center)
+                            }
+                        },
+                        contentPadding = PaddingValues(3.dp),
+                        modifier = Modifier.height(150.dp)
+                    )
+                }
             }
         }
     }

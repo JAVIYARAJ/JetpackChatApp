@@ -20,5 +20,7 @@ class Constant {
         const val SETTINGS = "settings"
         const val LOGOUT = "Logout"
 
+        val MONTHS= listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November","December")
+
     }
 }
