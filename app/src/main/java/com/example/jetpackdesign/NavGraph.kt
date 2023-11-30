@@ -1,5 +1,7 @@
 package com.example.jetpackdesign
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,10 +16,12 @@ import com.example.jetpackdesign.screens.LoginScreen
 import com.example.jetpackdesign.screens.PeopleScreen
 import com.example.jetpackdesign.screens.ProfileScreen
 import com.example.jetpackdesign.screens.SelectPeopleScreen
+import com.example.jetpackdesign.screens.Test1Screen
 import com.example.jetpackdesign.screens.TestScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(navHostController: NavHostController) {
 
@@ -69,7 +73,11 @@ fun NavGraph(navHostController: NavHostController) {
         }
 
         composable(Routes.TestRoute.route) {
-            TestScreen()
+            TestScreen(navHostController)
+        }
+
+        composable(Routes.Test1Route.route) {
+            Test1Screen()
         }
 
         composable(

@@ -1,6 +1,7 @@
 package com.example.jetpackdesign.component
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -62,6 +63,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -96,7 +98,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.example.jetpackdesign.R
+import com.example.jetpackdesign.Routes
 import com.example.jetpackdesign.data.FakeData
 import com.example.jetpackdesign.data.model.message.Message
 import com.example.jetpackdesign.data.model.message.UserChatModel
@@ -108,6 +112,7 @@ import com.wajahatkarim.flippable.FlipAnimationType
 import com.wajahatkarim.flippable.Flippable
 import com.wajahatkarim.flippable.FlippableController
 import kotlinx.coroutines.launch
+import okhttp3.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -758,7 +763,7 @@ fun ExposedDropdownMenuSample() {
 @Composable
 fun CustomCalender() {
 
-    val listOfDaysTitle = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    val listOfDaysTitle = listOf("Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
     val currentMonth = Util.getMonth()
     val currentYear = Util.getYear()
@@ -1096,35 +1101,51 @@ fun DayCardView(
 @SuppressLint("NewApi")
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun MainMonthView() {
+fun MainMonthView(navHostController: NavHostController) {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(count = 3),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        val listOfDaysTitle = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+        val listOfDaysTitle = listOf("Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
         items(MONTHS.size) {
-            Surface(modifier = Modifier.padding(horizontal = 5.dp)) {
+            Surface(modifier = Modifier.padding(horizontal = 5.dp).height(150.dp).clickable {
+                navHostController.navigate(Routes.Test1Route.route)
+            }) {
                 Column(modifier = widthModifier) {
-                    Text(text = MONTHS[it], style = MaterialTheme.typography.titleSmall)
 
                     val month = it + 1
-                    val disableCount=Util.getFirstDayOfMonth(2023, month)
+                    val disableCount=listOfDaysTitle.indexOf(Util.getFirstDayOfMonth(Util.getYear(), month))
+                    val dayCount=Util.getCurrentMonthDays(Util.getYear(),month)
+
+                    Text(text = MONTHS[it], style = MaterialTheme.typography.titleLarge, color =if(Util.getMonth()==month) Color.Blue else Color.Black)
+
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(count = 7),
                         content = {
-                            items(listOfDaysTitle.indexOf(disableCount)) {
+                            items(disableCount) {
                                 Surface {
 
                                 }
                             }
-                            items(Util.getCurrentMonthDays(2023,month)) {
+                            items(dayCount) {
                                 val dayValue = it + 1
-                                Text(text = dayValue.toString(), textAlign = TextAlign.Center)
+                                val isCurrentDay=Util.getDay()==dayValue && Util.getMonth()==month
+                                if(isCurrentDay){
+                                    Surface(modifier = Modifier
+                                        .width(30.dp)
+                                        .height(20.dp), shape = CircleShape, color = MaterialTheme.colorScheme.primary) {
+                                        Text(text = dayValue.toString(), textAlign = TextAlign.Center)
+                                    }
+                                }else{
+                                    Text(text = dayValue.toString(), textAlign = TextAlign.Center)
+                                }
+
                             }
                         },
                         contentPadding = PaddingValues(3.dp),
@@ -1134,4 +1155,15 @@ fun MainMonthView() {
             }
         }
     }
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTopBar(
+    title: String,
+    actions: @Composable RowScope.() -> Unit
+) {
+    TopAppBar(title = { Text(text = title, style = MaterialTheme.typography.titleLarge) }, actions = actions)
 }
